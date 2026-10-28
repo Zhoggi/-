@@ -1,6 +1,7 @@
 setup-git.bat
 push.bat
 stop-autopush.bat
+start-autopush.bat
 push-hidden.vbs
 КАК ВЫЛОЖИТЬ САЙТ.txt
 desktop.ini
