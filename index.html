@@ -599,15 +599,14 @@ function sylScore(h,t){
   sc+= (b.t===5||a.t===b.t)?25:0;
   return sc;
 }
-function judge(alts,target){
+function judge(alts,target,conf=0){
   const clean=t=>t.replace(/[\s，。？！、,.?!：:；;“”"'‘’]/g,'');
-  const list=[...new Set(alts.map(clean).filter(Boolean))];
+  const list=[...new Set(alts.map(clean).filter(Boolean))].slice(0,1);
   const ts=sylls(target);
   let best={score:0,heard:list[0]||'',hs:[],bad:[]};
   for(const t of list){
     let score, hs=sylls(t);
     if(t===target){score=100;hs=ts}
-    else if(t.includes(target)&&[...t].length<=[...target].length+1){score=95;hs=ts}
     else{
       const n=Math.max(ts.length,hs.length);let sum=0;
       for(let i=0;i<n;i++)sum+=(ts[i]&&hs[i])?sylScore(hs[i],ts[i]):0;
@@ -618,6 +617,7 @@ function judge(alts,target){
       best={score,heard:t,hs,bad};
     }
   }
+  if(conf>0&&conf<0.7&&best.score>=90){best.score=Math.round(55+conf*45);best.unsure=true}
   return best;
 }
 const TN=['','1-й','2-й','3-й','4-й','лёгкий'];
@@ -629,17 +629,17 @@ function showVerdict(v,target){
   const cls=v.score>=90?'ok':v.score>=60?'tone':'bad';
   const bar=`<div class="acc"><i class="${cls}" style="width:${v.score}%"></i></div>`;
   if(v.score>=90){el.innerHTML=`<span class="v ok">Молодец! Точность ${v.score}%</span>${bar}${heard}`;pronOk.add(target);store.set('pronOk',[...pronOk]);bump();say(target)}
-  else if(v.score>=60)el.innerHTML=`<span class="v tone">Почти: ${v.score}%</span>${bar}${tone}${heard}<span class="heard">Нужно от 90%. Послушай образец и попробуй ещё раз.</span>`;
+  else if(v.score>=60)el.innerHTML=`<span class="v tone">Почти: ${v.score}%</span>${bar}${v.unsure?'<span class="heard">Слово узнано, но распознавание не уверено — скажи чётче.</span>':''}${tone}${heard}<span class="heard">Нужно от 90%. Послушай образец и попробуй ещё раз.</span>`;
   else el.innerHTML=`<span class="v bad">Не похоже: ${v.score}%</span>${bar}${heard||'<span class="heard">Ничего не распознано, попробуй ещё раз.</span>'}`;
   renderSpeak(true);
 }
 $('#spMic').onclick=()=>{
   if(!SR||spBusy)return;
   const target=WORDS[si][0];
-  const rec=new SR(); rec.lang='zh-CN'; rec.interimResults=false; rec.maxAlternatives=10; rec.continuous=false;
+  const rec=new SR(); rec.lang='zh-CN'; rec.interimResults=false; rec.maxAlternatives=1; rec.continuous=false;
   let got=false; spBusy=true; $('#spMic').classList.add('on'); $('#spMic').textContent='Слушаю…';
   $('#spVerdict').innerHTML='<span class="heard">Говори…</span>';
-  rec.onresult=e=>{got=true;const alts=[];for(const res of e.results)for(let i=0;i<res.length;i++)alts.push(res[i].transcript);showVerdict(judge(alts,target),target)};
+  rec.onresult=e=>{got=true;const alts=[];for(const res of e.results)for(let i=0;i<res.length;i++)alts.push(res[i].transcript);const c=e.results[0]&&e.results[0][0]?e.results[0][0].confidence||0:0;showVerdict(judge(alts,target,c),target)};
   rec.onerror=e=>{got=true;const m={'not-allowed':'Нет доступа к микрофону. Разреши его в настройках браузера (значок слева от адреса сайта).','service-not-allowed':'Нет доступа к микрофону или сервису распознавания.','network':'Сервис распознавания недоступен. Проверь интернет или попробуй с VPN.','no-speech':'Ничего не услышал. Говори громче и ближе к микрофону.','audio-capture':'Микрофон не найден.'}[e.error]||('Ошибка распознавания: '+e.error);
     $('#spVerdict').innerHTML=`<span class="v bad">Не получилось</span><span class="heard">${esc(m)}</span>`};
   rec.onend=()=>{spBusy=false;$('#spMic').classList.remove('on');$('#spMic').textContent='Сказать';if(!got)$('#spVerdict').innerHTML='<span class="heard">Ничего не услышал. Нажми ещё раз и говори сразу.</span>'};
