@@ -100,22 +100,25 @@ button:focus-visible,select:focus-visible{outline:2px solid var(--seal);outline-
 .verdict .heard{color:var(--muted);font-size:14px}
 .verdict .heard b{font-family:var(--f-han);font-weight:500;color:var(--ink);font-size:18px}
 .chip.pok::after{content:"";position:absolute;right:4px;top:4px;width:6px;height:6px;border-radius:50%;background:var(--ok)}
-.tscroll{overflow:auto;max-height:70vh}
-.ht{width:100%;border-collapse:collapse;font-size:14px}
-.ht th{position:sticky;top:0;z-index:1;background:var(--sheet);text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-.ht td{padding:7px 10px;border-top:1px solid var(--line);vertical-align:middle}
+.tscroll{overflow-y:auto;overflow-x:hidden;max-height:70vh}
+.ht{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+.ht .w-n{width:44px}.ht .w-h{width:22%}.ht .w-py{width:17%}.ht .w-c{width:30px}.ht .w-st{width:50px}
+.ht .py2{display:none;font-family:var(--f-py);font-size:12.5px;line-height:1.2}
+.ht th{position:sticky;top:0;z-index:1;background:var(--sheet);text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:9px 4px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht td{padding:7px 4px;overflow-wrap:anywhere;border-top:1px solid var(--line);vertical-align:middle}
 .ht tr:first-child td{border-top:0}
-.ht .n{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap;width:1%}
-.ht .h{font-size:22px;white-space:nowrap}
+.ht .n{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;padding-left:10px}
+.ht .h{font-size:22px;overflow-wrap:normal;word-break:keep-all}
 .ht .h .ls{display:block;font-family:var(--f-ui);font-size:10.5px;color:var(--seal);font-weight:600;line-height:1}
-.ht .py{white-space:nowrap}
-.ht .m{min-width:180px;color:var(--ink)}
-.ht .c{text-align:center;width:1%;white-space:nowrap}
+.ht .pyc{overflow-wrap:anywhere}
+.ht .m{color:var(--ink);font-size:13.5px}
+.ht .c{text-align:center;white-space:nowrap;padding-left:0;padding-right:0}
 .ht tr.r-done td{background:var(--ok-soft)}.ht tr.r-done .h{color:var(--ok)}
 .ht tr.r-part td{background:var(--gold-soft)}
-.ck{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;color:var(--muted);font-weight:700}
+@media (max-width:640px){.ht .w-n,.ht .w-py{width:0}.ht .n,.ht .pyc{padding:0;font-size:0;visibility:hidden}.ht th.n,.ht th.pyc{font-size:0}.ht .py2{display:block}.ht .w-h{width:30%}.ht .w-c{width:24px}.ht .w-st{width:42px}.ht .h,.ht th:nth-child(2){padding-left:10px}.ht .h{font-size:20px}.ht .ck{width:18px;height:18px;font-size:11px}}
+.ck{display:inline-grid;place-items:center;width:20px;height:20px;font-size:12px;border-radius:50%;color:var(--muted);font-weight:700}
 .ck.on{background:var(--ok);color:#fff}
-.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--paper);color:var(--muted)}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 6px;border-radius:999px;background:var(--paper);color:var(--muted)}
 .pill.g{background:var(--ok);color:#fff}.pill.y{background:var(--gold);color:#fff}
 .hlist{background:var(--sheet);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .hw{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:8px 14px;border-top:1px solid var(--line)}
@@ -555,7 +558,7 @@ function renderHSK(){
   const shown=list.slice(0,hskShown);
   const idx=new Map(L.w.map((r,i)=>[r[0],i+1]));
   const ic=v=>v?'<span class="ck on" aria-label="да">✓</span>':'<span class="ck" aria-label="нет">·</span>';
-  $('#hskBox').innerHTML=shown.length?`<div class="tscroll"><table class="ht"><thead><tr><th class="n">№</th><th>Слово</th><th>Пиньинь</th><th>Значение</th><th class="c" title="Карточки (Микс)">К</th><th class="c" title="Тест">Т</th><th class="c" title="Письмо">П</th><th class="c" title="Произношение (Речь)">Р</th><th class="c">Статус</th></tr></thead><tbody>`+shown.map(({r,s,lv})=>`<tr class="${s.n===4?'r-done':s.n?'r-part':''}"><td class="n">${lv?'HSK '+lv:(idx.get(r[0])||'')}</td><td class="h han">${r[0]}${r[3]?'<small class="ls">урок 1</small>':''}</td><td class="py">${esc(r[1])}</td><td class="m">${esc(r[2]||"—")}</td><td class="c">${ic(s.c)}</td><td class="c">${ic(s.t)}</td><td class="c">${ic(s.p)}</td><td class="c">${ic(s.r)}</td><td class="c">${s.n===4?'<span class="pill g">освоено</span>':s.n?`<span class="pill y">${s.n}/4</span>`:'<span class="pill">—</span>'}</td></tr>`).join('')+`</tbody></table></div>`+(list.length>hskShown?`<button class="btn" id="hskMore">Показать ещё (${list.length-hskShown})</button>`:''):'<div class="empty">Ничего не найдено.</div>';
+  $('#hskBox').innerHTML=shown.length?`<div class="tscroll"><table class="ht"><colgroup><col class="w-n"><col class="w-h"><col class="w-py"><col><col class="w-c"><col class="w-c"><col class="w-c"><col class="w-c"><col class="w-st"></colgroup><thead><tr><th class="n">№</th><th>Слово</th><th class="pyc">Пиньинь</th><th>Значение</th><th class="c" title="Карточки (Микс)">К</th><th class="c" title="Тест">Т</th><th class="c" title="Письмо">П</th><th class="c" title="Произношение (Речь)">Р</th><th class="c" title="Статус">✓</th></tr></thead><tbody>`+shown.map(({r,s,lv})=>`<tr class="${s.n===4?'r-done':s.n?'r-part':''}"><td class="n">${lv?'HSK '+lv:(idx.get(r[0])||'')}</td><td class="h han">${r[0]}<span class="py py2">${esc(r[1])}</span>${r[3]?'<small class="ls">урок 1</small>':''}</td><td class="py pyc">${esc(r[1])}</td><td class="m">${esc(r[2]||"—")}</td><td class="c">${ic(s.c)}</td><td class="c">${ic(s.t)}</td><td class="c">${ic(s.p)}</td><td class="c">${ic(s.r)}</td><td class="c">${s.n===4?'<span class="pill g">4/4</span>':s.n?`<span class="pill y">${s.n}/4</span>`:'<span class="pill">0/4</span>'}</td></tr>`).join('')+`</tbody></table></div>`+(list.length>hskShown?`<button class="btn" id="hskMore">Показать ещё (${list.length-hskShown})</button>`:''):'<div class="empty">Ничего не найдено.</div>';
   const more=$('#hskMore');if(more)more.onclick=()=>{hskShown+=300;renderHSK()};
 }
 $('#hskLv').onclick=e=>{const b=e.target.closest('button');if(!b)return;hskLevel=+b.dataset.i;store.set('hskLevel',hskLevel);hskShown=200;hskQ='';$('#hskSearch').value='';renderHSK()};
