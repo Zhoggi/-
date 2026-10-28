@@ -107,6 +107,7 @@ button:focus-visible,select:focus-visible{outline:2px solid var(--seal);outline-
 .ht th{position:sticky;top:0;z-index:1;background:var(--sheet);text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:9px 4px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ht td{padding:7px 4px;overflow-wrap:anywhere;border-top:1px solid var(--line);vertical-align:middle}
 .ht tr:first-child td{border-top:0}
+.ht tbody tr{cursor:pointer}.ht tbody tr:hover td{box-shadow:inset 0 0 0 999px rgba(127,127,127,.06)}
 .ht .n{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;padding-left:10px}
 .ht .h{font-size:22px;overflow-wrap:normal;word-break:keep-all}
 .ht .h .ls{display:block;font-family:var(--f-ui);font-size:10.5px;color:var(--seal);font-weight:600;line-height:1}
@@ -246,7 +247,7 @@ h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(22px,5.4vw,30px);le
 .prog b{color:var(--seal);font-family:var(--f-disp);font-weight:400;font-size:20px}
 
 /* tabs */
-nav{grid-template-columns:repeat(7,1fr)!important;padding:5px;gap:3px;border-radius:14px;box-shadow:var(--shadow)}
+nav{grid-template-columns:repeat(6,1fr)!important;padding:5px;gap:3px;border-radius:14px;box-shadow:var(--shadow)}
 nav button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 2px 6px;border-radius:10px;font-size:12px;color:var(--muted)}
 nav button b{font-family:var(--f-brush);font-weight:400;font-size:24px;line-height:1;color:var(--ink);opacity:.85}
 nav button span{font-size:11.5px;letter-spacing:.01em}
@@ -290,7 +291,7 @@ h2{font-family:var(--f-disp);font-weight:400}
   .prog{padding:4px 8px}.prog b{font-size:17px}
   .sub{display:none}
   nav{position:fixed!important;top:auto!important;left:0;right:0;bottom:0;z-index:20;border-radius:16px 16px 0 0;border-width:1px 0 0;
-      grid-template-columns:repeat(7,1fr)!important;gap:0;
+      grid-template-columns:repeat(6,1fr)!important;gap:0;
       padding:6px max(6px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-right,0px));
       background:var(--sheet);box-shadow:0 -6px 24px -12px rgba(0,0,0,.35)}
   nav button{padding:6px 0 5px;min-height:52px}
@@ -386,7 +387,6 @@ details.tip[open] summary::after{transform:rotate(-135deg)}
     <button role="tab" data-tab="cards" aria-selected="true"><b aria-hidden="true">卡</b><span>Карточки</span></button>
     <button role="tab" data-tab="write" aria-selected="false"><b aria-hidden="true">写</b><span>Письмо</span></button>
     <button role="tab" data-tab="quiz" aria-selected="false"><b aria-hidden="true">考</b><span>Тест</span></button>
-    <button role="tab" data-tab="list" aria-selected="false"><b aria-hidden="true">词</b><span>Список</span></button>
     <button role="tab" data-tab="speak" aria-selected="false"><b aria-hidden="true">说</b><span>Речь</span></button>
     <button role="tab" data-tab="hsk" aria-selected="false"><b aria-hidden="true">级</b><span>HSK</span></button>
     <button role="tab" data-tab="friends" aria-selected="false"><b aria-hidden="true">友</b><span>Друзья</span></button>
@@ -468,7 +468,7 @@ details.tip[open] summary::after{transform:rotate(-135deg)}
   <section class="panel" id="tab-hsk" hidden>
     <div class="hsk-lv" id="hskLv" role="group" aria-label="Уровень HSK"></div>
     <div class="hs" id="hskSum"></div>
-    <p class="note">Слово <b class="ok-t">светится зелёным</b>, когда оно пройдено везде: отмечено «Знаю» в карточках в режиме «Микс», правильно отвечено в тесте, все его иероглифы написаны по памяти без ошибок и оно произнесено во вкладке «Речь» с точностью от 90%. <b class="gold-t">Жёлтым</b> — пройдено частично. Колонки: К — карточки, Т — тест, П — письмо, Р — речь. Список — HSK 3.0 (редакция 2025), значения слов не из урока — на английском.</p>
+    <p class="note">Слово <b class="ok-t">светится зелёным</b>, когда оно пройдено везде: отмечено «Знаю» в карточках в режиме «Микс», правильно отвечено в тесте, все его иероглифы написаны по памяти без ошибок и оно произнесено во вкладке «Речь» с точностью от 90%. <b class="gold-t">Жёлтым</b> — пройдено частично. Колонки: К — карточки, Т — тест, П — письмо, Р — речь. Нажми на строку — услышишь слово. «Урок 1» показывает все слова урока по порядку учебника, с любого уровня. Список — HSK 3.0 (редакция 2025), значения слов не из урока — на английском.</p>
     <div class="row">
       <input id="hskSearch" placeholder="Поиск: 你好, nihao или hello" autocomplete="off">
       <div class="seg" id="hskF">
@@ -479,6 +479,15 @@ details.tip[open] summary::after{transform:rotate(-135deg)}
       </div>
     </div>
     <div class="hlist" id="hskBox"></div>
+    <details class="tip"><summary><span class="q-ico" aria-hidden="true">?</span>Как учить, чтобы запомнилось</summary><div class="tip-body">
+      <ol>
+        <li>Каждый день 10 минут карточек. Слова, которые не вспомнил, вернутся в конец колоды.</li>
+        <li>Новый иероглиф: посмотри порядок черт, обведи 2 раза, потом напиши по памяти.</li>
+        <li><a href="propisi.pdf" download style="color:var(--seal);font-weight:600">Скачай прописи (PDF)</a>, и заполни строку на каждый иероглиф. Проговаривай слово вслух, пока пишешь.</li>
+        <li>Тест в конце дня. Ошибки из теста повтори завтра первыми.</li>
+        <li>Следи за тонами: hǎo и hào — это разные слова.</li>
+      </ol>
+    </div></details>
   </section>
 
   <!-- FRIENDS -->
@@ -500,16 +509,6 @@ details.tip[open] summary::after{transform:rotate(-135deg)}
   <section class="panel" id="tab-list" hidden>
     <div class="row" style="justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">Урок 1</h2><span class="tag">28 слов · 32 иероглифа</span></div>
     <div class="list" id="list"></div>
-    <div class="tips">
-      <h3>Как учить, чтобы запомнилось</h3>
-      <ol>
-        <li>Каждый день 10 минут карточек. Слова, которые не вспомнил, вернутся в конец колоды.</li>
-        <li>Новый иероглиф: посмотри порядок черт, обведи 2 раза, потом напиши по памяти.</li>
-        <li><a href="propisi.pdf" download style="color:var(--seal);font-weight:600">Скачай прописи (PDF)</a>, и заполни строку на каждый иероглиф. Проговаривай слово вслух, пока пишешь.</li>
-        <li>Тест в конце дня. Ошибки из теста повтори завтра первыми.</li>
-        <li>Следи за тонами: hǎo и hào — это разные слова.</li>
-      </ol>
-    </div>
   </section>
 </div>
 
@@ -707,19 +706,23 @@ function renderHSK(){
   const done=rows.filter(x=>x.s.n===4).length, part=rows.filter(x=>x.s.n>0&&x.s.n<4).length;
   $('#hskSum').innerHTML=`<div class="hs-top">HSK ${L.l}: <b class="ok-t">${done}</b> из ${rows.length} освоено <span>· в процессе ${part}</span></div><div class="hs-bar"><i class="g" style="width:${done/rows.length*100}%"></i><i class="y" style="width:${part/rows.length*100}%"></i></div>`;
   let list=rows;
+  const lessonAll=hskFilter==='lesson'&&!hskQ.trim();
+  if(lessonAll){list=[];WORDS.forEach(w=>{let best=null;HSK.forEach(LL=>LL.w.forEach(r=>{if(r[0]===w[0]&&(!best||(plain(r[1])===plain(w[1])&&plain(best.r[1])!==plain(w[1]))))best={r,s:wst(r[0],known,quizOk,wDone),lv:LL.l}}));if(best)list.push(best)})}
   const q=hskQ.trim().toLowerCase(), qp=plain(q);
   if(q){list=[];HSK.forEach(LL=>LL.w.forEach(r=>{if(r[0].includes(q)||(qp&&plain(r[1]).includes(qp))||r[2].toLowerCase().includes(q))list.push({r,s:wst(r[0],known,quizOk,wDone),lv:LL.l})}))}
   if(hskFilter==='done')list=list.filter(x=>x.s.n===4);
   else if(hskFilter==='part')list=list.filter(x=>x.s.n>0&&x.s.n<4);
   else if(hskFilter==='lesson')list=list.filter(x=>x.r[3]);
+  if(lessonAll){const d=list.filter(x=>x.s.n===4).length,pa=list.filter(x=>x.s.n>0&&x.s.n<4).length;$('#hskSum').innerHTML=`<div class="hs-top">Урок 1: <b class="ok-t">${d}</b> из ${list.length} освоено <span>· в процессе ${pa}</span></div><div class="hs-bar"><i class="g" style="width:${d/list.length*100}%"></i><i class="y" style="width:${pa/list.length*100}%"></i></div>`}
   const shown=list.slice(0,hskShown);
   const idx=new Map(L.w.map((r,i)=>[r[0],i+1]));
   const ic=v=>v?'<span class="ck on" aria-label="да">✓</span>':'<span class="ck" aria-label="нет">·</span>';
-  $('#hskBox').innerHTML=shown.length?`<div class="tscroll"><table class="ht"><colgroup><col class="w-n"><col class="w-h"><col class="w-py"><col><col class="w-c"><col class="w-c"><col class="w-c"><col class="w-c"><col class="w-st"></colgroup><thead><tr><th class="n">№</th><th>Слово</th><th class="pyc">Пиньинь</th><th>Значение</th><th class="c" title="Карточки (Микс)">К</th><th class="c" title="Тест">Т</th><th class="c" title="Письмо">П</th><th class="c" title="Произношение (Речь)">Р</th><th class="c" title="Статус">✓</th></tr></thead><tbody>`+shown.map(({r,s,lv})=>`<tr class="${s.n===4?'r-done':s.n?'r-part':''}"><td class="n">${lv?'HSK '+lv:(idx.get(r[0])||'')}</td><td class="h han">${r[0]}<span class="py py2">${esc(r[1])}</span>${r[3]?'<small class="ls">урок 1</small>':''}</td><td class="py pyc">${esc(r[1])}</td><td class="m">${esc(r[2]||"—")}</td><td class="c">${ic(s.c)}</td><td class="c">${ic(s.t)}</td><td class="c">${ic(s.p)}</td><td class="c">${ic(s.r)}</td><td class="c">${s.n===4?'<span class="pill g">4/4</span>':s.n?`<span class="pill y">${s.n}/4</span>`:'<span class="pill">0/4</span>'}</td></tr>`).join('')+`</tbody></table></div>`+(list.length>hskShown?`<button class="btn" id="hskMore">Показать ещё (${list.length-hskShown})</button>`:''):'<div class="empty">Ничего не найдено.</div>';
+  $('#hskBox').innerHTML=shown.length?`<div class="tscroll"><table class="ht"><colgroup><col class="w-n"><col class="w-h"><col class="w-py"><col><col class="w-c"><col class="w-c"><col class="w-c"><col class="w-c"><col class="w-st"></colgroup><thead><tr><th class="n">№</th><th>Слово</th><th class="pyc">Пиньинь</th><th>Значение</th><th class="c" title="Карточки (Микс)">К</th><th class="c" title="Тест">Т</th><th class="c" title="Письмо">П</th><th class="c" title="Произношение (Речь)">Р</th><th class="c" title="Статус">✓</th></tr></thead><tbody>`+shown.map(({r,s,lv})=>`<tr data-h="${esc(r[0])}" class="${s.n===4?'r-done':s.n?'r-part':''}"><td class="n">${lv?'HSK '+lv:(idx.get(r[0])||'')}</td><td class="h han">${r[0]}<span class="py py2">${esc(r[1])}</span>${r[3]?'<small class="ls">урок 1</small>':''}</td><td class="py pyc">${esc(r[1])}</td><td class="m">${esc(r[2]||"—")}</td><td class="c">${ic(s.c)}</td><td class="c">${ic(s.t)}</td><td class="c">${ic(s.p)}</td><td class="c">${ic(s.r)}</td><td class="c">${s.n===4?'<span class="pill g">4/4</span>':s.n?`<span class="pill y">${s.n}/4</span>`:'<span class="pill">0/4</span>'}</td></tr>`).join('')+`</tbody></table></div>`+(list.length>hskShown?`<button class="btn" id="hskMore">Показать ещё (${list.length-hskShown})</button>`:''):'<div class="empty">Ничего не найдено.</div>';
   const more=$('#hskMore');if(more)more.onclick=()=>{hskShown+=300;renderHSK()};
 }
 $('#hskLv').onclick=e=>{const b=e.target.closest('button');if(!b)return;hskLevel=+b.dataset.i;store.set('hskLevel',hskLevel);hskShown=200;hskQ='';$('#hskSearch').value='';renderHSK()};
 document.querySelectorAll('#hskF button').forEach(b=>b.onclick=()=>{hskFilter=b.dataset.f;hskShown=200;document.querySelectorAll('#hskF button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderHSK()});
+$('#hskBox').addEventListener('click',e=>{const tr=e.target.closest('tr[data-h]');if(tr)say(tr.dataset.h)});
 $('#hskSearch').oninput=e=>{clearTimeout(hskT);hskT=setTimeout(()=>{hskQ=e.target.value;hskShown=200;renderHSK()},200)};
 
 /* ---------- SPEAK ---------- */
@@ -924,7 +927,7 @@ async function renderBoard(){
 })();
 $('#nickSave').onclick=()=>{act.nick=$('#nick').value.trim().slice(0,24);store.set('act',act);if(myRef&&canWrite){setSync('Сохраняю…');flush()}};
 $('#nick').onkeydown=e=>{if(e.key==='Enter')$('#nickSave').click()};
-const t0=store.get('tab','cards');if(t0!=='cards')document.querySelector(`nav [data-tab="${t0}"]`)?.click();
+let t0=store.get('tab','cards');if(t0==='list')t0='hsk';if(t0!=='cards')document.querySelector(`nav [data-tab="${t0}"]`)?.click();
 </script>
 </body>
 </html>
