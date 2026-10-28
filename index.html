@@ -297,8 +297,11 @@ h2{font-family:var(--f-disp);font-weight:400}
   nav button b{font-size:22px}
   nav button span{font-size:10px}
   .card-in{height:min(48vh,300px)}
-  #tab-write .pad{width:min(260px,calc(100vw - 40px));height:min(260px,calc(100vw - 40px))}
-  #tab-cards .note{display:none}
+  #tab-write .pad{width:min(240px,calc(100vw - 40px));height:min(240px,calc(100vw - 40px))}
+  #tab-write .info{gap:4px}
+  #wMeta{display:none}
+  #tab-write .status{font-size:13px;min-height:0}
+  #tab-cards .note{font-size:12px;padding:7px 10px}
   .face .big,.q .ask.han{font-size:clamp(46px,17vw,72px)}
   .face.back .big{font-size:clamp(40px,13vw,54px)!important}
   .sp-card .big{font-size:clamp(46px,17vw,68px)}
@@ -316,6 +319,28 @@ h2{font-family:var(--f-disp);font-weight:400}
   .note{font-size:12.5px}
 }
 @media (max-width:360px){nav button span{display:none}nav button{min-height:46px}}
+
+/* hints: collapsible; on phone folded and moved to the bottom of the tab */
+details.tip{background:var(--sheet);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+details.tip summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+details.tip summary::-webkit-details-marker{display:none}
+details.tip summary::after{content:"";margin-left:auto;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+details.tip[open] summary::after{transform:rotate(-135deg)}
+.q-ico{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--seal);color:#fff;font-size:12px;font-weight:700;flex:none}
+.tip-body{margin:0;padding:0 12px 11px;font-size:13px;color:var(--muted)}
+.tip-body b{color:var(--seal);font-weight:600}
+.wact{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wact .btn{padding-inline:6px;line-height:1.2}
+.wnav{width:100%}
+@media (max-width:640px){
+  .panel>details.tip{order:99}
+  details.tip summary{padding:8px 11px;font-size:12.5px}
+  #tab-write .wnav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #tab-write .wnav .grow{display:none}
+  #tab-write .wnav .btn{width:100%}
+  .wact{gap:6px}
+  .wact .btn{font-size:13px;min-height:50px;padding-inline:4px}
+}
 /* ---- phone, round 2 ---- */
 #pad,#pad *{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #pad{overscroll-behavior:contain}
@@ -327,9 +352,8 @@ h2{font-family:var(--f-disp);font-weight:400}
   #tab-write .info{width:100%;align-items:center;text-align:center;gap:6px}
   #tab-write .info .row{justify-content:center}
   #strip svg{width:28px;height:28px}
-  #tab-write>.row,#tab-speak>.row:last-of-type{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  #tab-write>.row .grow,#tab-speak>.row:last-of-type .grow{display:none}
-  #tab-write>.row .btn{width:100%;padding-inline:8px}
+  #tab-speak>.row:last-of-type{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #tab-speak>.row:last-of-type .grow{display:none}
   .prog{font-size:0}.prog b{font-size:17px;display:block;line-height:1.1}
   .prog::after{content:"знаю";font-size:10px;display:block}
   .sp-card{padding:16px 14px;gap:8px}
@@ -403,15 +427,14 @@ h2{font-family:var(--f-disp);font-weight:400}
         <div id="wRu"></div>
         <div class="tag" id="wMeta"></div>
         <div class="strip" id="strip"></div>
+        <div class="row wnav"><button class="btn" id="bPrev">← Назад</button><span class="grow"></span><button class="btn" id="bNext">Дальше →</button></div>
         <div class="status" id="wStatus">Сначала посмотри порядок черт, потом обведи.</div>
       </div>
     </div>
-    <div class="row">
+    <div class="wact">
       <button class="btn" id="bAnim">▶ Порядок черт</button>
       <button class="btn" id="bTrace">Обвести</button>
       <button class="btn primary" id="bFree">Написать по памяти</button>
-      <span class="grow"></span>
-      <button class="btn" id="bNext">Дальше →</button>
     </div>
   </section>
 
@@ -625,6 +648,7 @@ function runQuiz(outline){
 $('#bTrace').onclick=()=>runQuiz(true);
 $('#bFree').onclick=()=>runQuiz(false);
 $('#bNext').onclick=()=>{wi=(wi+1)%CHARS.length;loadChar()};
+$('#bPrev').onclick=()=>{wi=(wi-1+CHARS.length)%CHARS.length;loadChar()};
 $('#wSpk').onclick=()=>say(CHARS[wi][0]);
 
 /* ---------- QUIZ ---------- */
@@ -791,6 +815,9 @@ $('#list').onclick=e=>{const b=e.target.closest('.spk');if(b)say(b.dataset.h)};
 if(!canSpeak)document.querySelectorAll('.spk').forEach(b=>b.hidden=true);
 
 buildDeck();
+document.querySelectorAll('p.note').forEach(n=>{const d=document.createElement('details');d.className='tip';if(n.id){d.id=n.id;n.removeAttribute('id')}
+  d.innerHTML='<summary><span class="q-ico" aria-hidden="true">?</span>Подсказка</summary>';n.className='tip-body';n.replaceWith(d);d.appendChild(n);
+  try{if(matchMedia('(min-width:641px)').matches)d.open=true}catch(e){}});
 
 /* ---------- SHARED STATS ---------- */
 const act=Object.assign({reviews:0,quizzes:0,quizBest:0,quizLast:null,nick:'',days:[]},store.get('act',{}));
