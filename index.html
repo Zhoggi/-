@@ -320,6 +320,9 @@ const STROKES={"你":{"strokes":["M 272 567 Q 306 613 342 669 Q 370 718 395 743 
 
 const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const RESET_ID='r-2026-10-29';
+(()=>{if(store.get('resetId',null)!==RESET_ID){['known','wDone','quizOk','act'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});store.set('resetId',RESET_ID)}})();
+const fresh=d=>d&&d.resetId===RESET_ID?d:{nick:d&&d.nick||'',photo:d&&d.photo||'',updated:d&&d.updated||''};
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -522,7 +525,7 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 let DB=null, U=null, myId=null, myRef=null, saveT=null, saving=false, again=false, remote={}, canWrite=true;
 function payload(){
   const t=today(); if(!act.days.includes(t)){act.days.push(t);act.days=act.days.slice(-60)}
-  return {photo:act.photo||'',nick:act.nick.slice(0,24),known:[...known],written:[...wDone],quizOk:[...quizOk],reviews:act.reviews,quizzes:act.quizzes,
+  return {photo:act.photo||'',nick:act.nick.slice(0,24),resetId:RESET_ID,known:[...known],written:[...wDone],quizOk:[...quizOk],reviews:act.reviews,quizzes:act.quizzes,
     quizBest:act.quizBest,quizLast:act.quizLast,days:act.days,updated:new Date().toISOString()};
 }
 function bump(){store.set('act',act);if(!myRef||!canWrite)return;clearTimeout(saveT);saveT=setTimeout(flush,1200)}
@@ -602,7 +605,7 @@ async function renderBoard(){
     myId=u.uid;myRef=fs.collection('stats').doc(u.uid);$('#nickSave').disabled=false;
     try{
       const snap=await myRef.get();
-      if(snap.exists){const d=snap.data();
+      if(snap.exists&&snap.data().resetId===RESET_ID){const d=snap.data();
         (d.known||[]).forEach(x=>known.add(x));(d.written||[]).forEach(x=>wDone.add(x));(d.quizOk||[]).forEach(x=>quizOk.add(x));store.set('quizOk',[...quizOk]);
         act.reviews=Math.max(act.reviews,d.reviews||0);act.quizzes=Math.max(act.quizzes,d.quizzes||0);act.quizBest=Math.max(act.quizBest,d.quizBest||0);
         act.quizLast=act.quizLast??d.quizLast??null;act.nick=act.nick||d.nick||'';act.days=[...new Set([...(d.days||[]),...act.days])].sort().slice(-60);
@@ -615,7 +618,7 @@ async function renderBoard(){
     $('#nick').value=act.nick;
     setSync('Прогресс сохраняется автоматически','ok');
     flush();
-    unsub=fs.collection('stats').onSnapshot(s=>{remote={};s.forEach(d=>remote[d.id]=d.data());renderBoard()},
+    unsub=fs.collection('stats').onSnapshot(s=>{remote={};s.forEach(d=>remote[d.id]=fresh(d.data()));renderBoard()},
       e=>{$('#board').innerHTML='<div class="empty">Нет доступа к таблице. Проверь правила Firestore (см. README).</div>'});
   });
 })();
