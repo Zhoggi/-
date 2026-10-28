@@ -381,9 +381,9 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 /* speech */
 let zhVoice=null;
 const canSpeak='speechSynthesis' in window;
-function pickVoice(){try{const v=speechSynthesis.getVoices();zhVoice=v.find(x=>/zh[-_]CN/i.test(x.lang))||v.find(x=>/^zh/i.test(x.lang))||null}catch(e){}}
+function pickVoice(){try{const v=speechSynthesis.getVoices().filter(x=>/^zh/i.test(x.lang)&&!/HK|TW|yue/i.test(x.lang));const rank=x=>(/Xiaoxiao|Xiaoyi|Yunxi|Yunjian|Natural|Online/i.test(x.name)?0:/Google/i.test(x.name)?1:/Tingting|Ting-Ting|Lili|Yu-shu/i.test(x.name)?2:/zh[-_]CN/i.test(x.lang)?3:4);v.sort((a,b)=>rank(a)-rank(b));zhVoice=v[0]||null}catch(e){}}
 if(canSpeak){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
-function say(t){if(!canSpeak)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.8;if(zhVoice)u.voice=zhVoice;speechSynthesis.speak(u)}catch(e){}}
+function say(t){if(!canSpeak)return;try{speechSynthesis.cancel();if(!zhVoice)pickVoice();const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.7;u.volume=1;u.pitch=1;if(zhVoice)u.voice=zhVoice;setTimeout(()=>speechSynthesis.speak(u),60)}catch(e){}}
 if(!canSpeak)document.documentElement.classList.add('nospeech');
 
 /* tabs */
