@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23c3311f'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='white' font-family='serif'%3E%E5%AD%A6%3C/text%3E%3C/svg%3E">
 <title>Наш китойский</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Noto+Sans:wght@500;600&family=Noto+Serif+SC:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Noto+Sans:wght@500;600&family=Noto+Serif+SC:wght@500;700&family=Ma+Shan+Zheng&family=Prata&display=swap">
 <style>
 html{-webkit-text-size-adjust:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -212,14 +212,116 @@ button:focus-visible,select:focus-visible{outline:2px solid var(--seal);outline-
 details summary{cursor:pointer;font-size:13px;color:var(--muted)}
 .empty{background:var(--sheet);border:1px dashed var(--line);border-radius:14px;padding:20px;text-align:center;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.card-in{transition:none}}
+
+/* ===== «Тушь и киноварь»: тетрадь в клетку 田字格, печать-киноварь, кисть ===== */
+:root{
+  --paper:#eceee7; --sheet:#fbfcf8; --ink:#171a18; --muted:#636b65; --line:#d6dbd2;
+  --seal:#cf3a22; --seal-soft:#f6ddd6; --grid:#e0b8ae; --trace:#cdd2ca; --ok:#23825a; --ok-soft:#dcefe4;
+  --gold:#b07a10; --gold-soft:#f7ecd2; --gridline:rgba(207,58,34,.07); --shadow:0 1px 0 rgba(23,26,24,.06),0 8px 24px -12px rgba(23,26,24,.18);
+  --f-brush:"Ma Shan Zheng","STKaiti","KaiTi",cursive;
+  --f-disp:"Prata","Georgia",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#111312; --sheet:#1a1d1b; --ink:#ecefe9; --muted:#98a19a; --line:#2b302c;
+  --seal:#ff6b4f; --seal-soft:#3b211c; --grid:#5a3029; --trace:#3e443f; --ok:#5ed39b; --ok-soft:#173226;
+  --gold:#e7b54e; --gold-soft:#352c16; --gridline:rgba(255,107,79,.06); --shadow:0 1px 0 rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111312; --sheet:#1a1d1b; --ink:#ecefe9; --muted:#98a19a; --line:#2b302c;
+  --seal:#ff6b4f; --seal-soft:#3b211c; --grid:#5a3029; --trace:#3e443f; --ok:#5ed39b; --ok-soft:#173226;
+  --gold:#e7b54e; --gold-soft:#352c16; --gridline:rgba(255,107,79,.06); --shadow:0 1px 0 rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7); color-scheme:dark}
+
+body{background-color:var(--paper);
+  background-image:linear-gradient(var(--gridline) 1px,transparent 1px),linear-gradient(90deg,var(--gridline) 1px,transparent 1px);
+  background-size:56px 56px;background-position:center top}
+.wrap{max-width:760px;gap:16px}
+
+/* header */
+header{gap:14px;align-items:center;padding-block:4px 2px}
+.seal{width:54px;height:54px;border-radius:10px;background:var(--seal);transform:rotate(-4deg);box-shadow:inset 0 0 0 3px var(--seal),inset 0 0 0 5px rgba(255,255,255,.55);font-size:0}
+.seal span{font-family:var(--f-brush);font-size:38px;color:#fff;line-height:1;transform:rotate(4deg) translateY(2px)}
+.ttl{min-width:0}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(22px,5.4vw,30px);letter-spacing:.005em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:12.5px;margin-top:3px}
+.prog{flex:none;border:1.5px solid var(--seal);color:var(--seal);border-radius:10px;padding:5px 10px;text-align:center;font-size:10.5px;line-height:1.25;background:var(--sheet)}
+.prog b{color:var(--seal);font-family:var(--f-disp);font-weight:400;font-size:20px}
+
+/* tabs */
+nav{grid-template-columns:repeat(7,1fr)!important;padding:5px;gap:3px;border-radius:14px;box-shadow:var(--shadow)}
+nav button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 2px 6px;border-radius:10px;font-size:12px;color:var(--muted)}
+nav button b{font-family:var(--f-brush);font-weight:400;font-size:24px;line-height:1;color:var(--ink);opacity:.85}
+nav button span{font-size:11.5px;letter-spacing:.01em}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+nav button[aria-selected="true"] b{color:var(--seal);opacity:1}
+nav button:not([aria-selected="true"]):hover{background:var(--paper)}
+
+/* surfaces */
+.face,.q,.done,.list,.tips,.me,.pl,.sp-card,.hs,.hlist,.note,.empty{box-shadow:var(--shadow)}
+.face,.q,.sp-card{border-radius:18px}
+.btn{border-radius:11px}
+.btn.primary{background:var(--seal);border-color:var(--seal);color:#fff}
+.seg{border-radius:11px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* the big character always sits in a 田字格 cell, like in a copybook */
+.face .big,.sp-card .big,.q .ask.han{display:flex;gap:0;justify-content:center;flex-wrap:wrap;line-height:1}
+.face .big i,.sp-card .big i,.q .ask.han i{font-style:normal;position:relative;display:grid;place-items:center;width:1.4em;height:1.4em;
+  background:linear-gradient(var(--grid),var(--grid)) center/100% 1px no-repeat,linear-gradient(var(--grid),var(--grid)) center/1px 100% no-repeat;
+  outline:1.5px solid var(--grid);outline-offset:-.75px}
+.face .big i::before,.sp-card .big i::before,.q .ask.han i::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(45deg,transparent calc(50% - .5px),var(--grid) 50%,transparent calc(50% + .5px)),
+             linear-gradient(-45deg,transparent calc(50% - .5px),var(--grid) 50%,transparent calc(50% + .5px));opacity:.4;pointer-events:none}
+.face.back .big{font-size:58px!important}
+.face .big,.q .ask.han{font-size:80px}
+.sp-card .big{font-size:80px}
+.py{color:var(--seal)}
+.card-in{height:320px}
+.chip{border-radius:9px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);box-shadow:none}
+.mic{background:var(--seal);box-shadow:0 8px 22px -8px var(--seal)}
+.rank{font-family:var(--f-brush)}
+h2{font-family:var(--f-disp);font-weight:400}
+
+/* ---------- phone ---------- */
+@media (max-width:640px){
+  body{padding-block:12px calc(86px + env(safe-area-inset-bottom,0px));background-size:44px 44px}
+  .wrap{gap:12px}
+  header{gap:11px}
+  .seal{width:44px;height:44px}.seal span{font-size:31px}
+  .prog{padding:4px 8px}.prog b{font-size:17px}
+  .sub{display:none}
+  nav{position:fixed!important;top:auto!important;left:0;right:0;bottom:0;z-index:20;border-radius:16px 16px 0 0;border-width:1px 0 0;
+      grid-template-columns:repeat(7,1fr)!important;gap:0;
+      padding:6px max(6px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-right,0px));
+      background:var(--sheet);box-shadow:0 -6px 24px -12px rgba(0,0,0,.35)}
+  nav button{padding:6px 0 5px;min-height:52px}
+  nav button b{font-size:22px}
+  nav button span{font-size:10px}
+  .card-in{height:min(62vh,340px)}
+  .face .big,.q .ask.han{font-size:clamp(46px,17vw,72px)}
+  .face.back .big{font-size:clamp(40px,13vw,54px)!important}
+  .sp-card .big{font-size:clamp(46px,17vw,68px)}
+  .opts{grid-template-columns:1fr 1fr}
+  .opt{min-height:60px}
+  .btn{min-height:46px}
+  .row>.seg{max-width:100%}
+  .seg{display:flex;width:100%}
+  .seg button{flex:1;padding:9px 4px;font-size:12.5px}
+  .chips{gap:5px}
+  .chip{width:40px;height:40px;font-size:19px}
+  .desk{gap:12px}
+  .stats{grid-template-columns:repeat(3,1fr)!important}
+  .hsk-lv button{padding:6px 2px}
+  .note{font-size:12.5px}
+}
+@media (max-width:360px){nav button span{display:none}nav button{min-height:46px}}
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <header>
-    <div class="seal">学</div>
-    <div>
+    <div class="seal" aria-hidden="true"><span>汉</span></div>
+    <div class="ttl">
       <h1>Наш китойский</h1>
       <p class="sub">28 слов, 32 иероглифа</p>
     </div>
@@ -227,13 +329,13 @@ details summary{cursor:pointer;font-size:13px;color:var(--muted)}
   </header>
 
   <nav role="tablist">
-    <button role="tab" data-tab="cards" aria-selected="true">Карточки</button>
-    <button role="tab" data-tab="write" aria-selected="false">Письмо</button>
-    <button role="tab" data-tab="quiz" aria-selected="false">Тест</button>
-    <button role="tab" data-tab="list" aria-selected="false">Список</button>
-    <button role="tab" data-tab="speak" aria-selected="false">Речь</button>
-    <button role="tab" data-tab="hsk" aria-selected="false">HSK</button>
-    <button role="tab" data-tab="friends" aria-selected="false">Друзья</button>
+    <button role="tab" data-tab="cards" aria-selected="true"><b aria-hidden="true">卡</b><span>Карточки</span></button>
+    <button role="tab" data-tab="write" aria-selected="false"><b aria-hidden="true">写</b><span>Письмо</span></button>
+    <button role="tab" data-tab="quiz" aria-selected="false"><b aria-hidden="true">考</b><span>Тест</span></button>
+    <button role="tab" data-tab="list" aria-selected="false"><b aria-hidden="true">词</b><span>Список</span></button>
+    <button role="tab" data-tab="speak" aria-selected="false"><b aria-hidden="true">说</b><span>Речь</span></button>
+    <button role="tab" data-tab="hsk" aria-selected="false"><b aria-hidden="true">级</b><span>HSK</span></button>
+    <button role="tab" data-tab="friends" aria-selected="false"><b aria-hidden="true">友</b><span>Друзья</span></button>
   </nav>
 
   <!-- CARDS -->
@@ -376,6 +478,7 @@ const RESET_ID='r-2026-10-29';
 const fresh=d=>d&&d.resetId===RESET_ID?d:{nick:d&&d.nick||'',photo:d&&d.photo||'',updated:d&&d.updated||''};
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const cells=w=>[...w].map(c=>`<i>${esc(c)}</i>`).join('');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* speech */
@@ -428,13 +531,13 @@ function renderCard(){
   }
   const [h,p,r,pos]=deck[0];
   const mode= dir==='mix'?['h2r','r2h','p2h'][Math.random()*3|0]:dir;
-  const front= mode==='h2r'?`<div class="big han">${h}</div>`
+  const front= mode==='h2r'?`<div class="big han">${cells(h)}</div>`
     : mode==='r2h'?`<div class="ru">${esc(r)}</div><div class="tag">${esc(pos)}</div>`
     : `<button class="btn" id="play">🔊 Послушать</button><div class="tag">какое это слово?</div>`;
   box.innerHTML=`<div class="card" id="card" tabindex="0" role="button" aria-label="Перевернуть карточку">
     <div class="card-in">
       <div class="face"><span class="corner tag">осталось ${deck.length}</span>${front}<span class="hint">нажми, чтобы перевернуть</span></div>
-      <div class="face back"><div class="big han" style="font-size:72px">${h}</div><div class="py mid">${p}</div><div class="ru">${esc(r)}</div><div class="tag">${esc(pos)}</div></div>
+      <div class="face back"><div class="big han">${cells(h)}</div><div class="py mid">${p}</div><div class="ru">${esc(r)}</div><div class="tag">${esc(pos)}</div></div>
     </div></div>
     <div class="row" style="margin-top:12px"><button class="btn bad grow" id="no">Ещё не знаю</button><button class="btn good grow" id="yes">Знаю</button></div>`;
   const card=$('#card');
@@ -520,8 +623,8 @@ function renderQ(){
   }
   const q=quiz.qs[quiz.i],[h,p,r]=q.w;
   $('#qCount').textContent=`Вопрос ${quiz.i+1} из ${n}`;
-  const ask={h2r:`<div class="ask han">${h}</div><div class="tag">что значит?</div>`,
-    h2p:`<div class="ask han">${h}</div><div class="tag">как читается?</div>`,
+  const ask={h2r:`<div class="ask han">${cells(h)}</div><div class="tag">что значит?</div>`,
+    h2p:`<div class="ask han">${cells(h)}</div><div class="tag">как читается?</div>`,
     r2h:`<div class="ask text">${esc(r)}</div><div class="tag">выбери иероглиф</div>`,
     p2h:`<div class="ask text py" style="font-size:30px">${p}</div><div class="tag">выбери иероглиф</div>`}[q.t];
   const lab=o=>q.t==='h2r'?esc(o[2]):q.t==='h2p'?o[1]:o[0];
@@ -585,7 +688,7 @@ function renderSpeak(keep){
   si=(si+WORDS.length)%WORDS.length; store.set('si',si);
   const [h,p,r]=WORDS[si];
   document.querySelectorAll('#spChips .chip').forEach((b,i)=>{b.setAttribute('aria-pressed',i===si);b.classList.toggle('pok',pronOk.has(WORDS[i][0]))});
-  $('#spH').textContent=h;$('#spPy').textContent=p;$('#spRu').textContent=r;
+  $('#spH').innerHTML=cells(h);$('#spPy').textContent=p;$('#spRu').textContent=r;
   $('#spCount').textContent=`Произнесено верно: ${WORDS.filter(w=>pronOk.has(w[0])).length} из ${WORDS.length}`;
   if(!keep&&!spBusy)$('#spVerdict').innerHTML=SR?'<span class="heard">Нажми «Сказать» и произнеси слово вслух.</span>':'<span class="v bad">Этот браузер не умеет распознавать речь</span><span class="heard">Открой сайт в Chrome, Edge или Safari.</span>';
   $('#spMic').disabled=!SR;
