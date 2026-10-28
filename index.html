@@ -296,7 +296,9 @@ h2{font-family:var(--f-disp);font-weight:400}
   nav button{padding:6px 0 5px;min-height:52px}
   nav button b{font-size:22px}
   nav button span{font-size:10px}
-  .card-in{height:min(62vh,340px)}
+  .card-in{height:min(48vh,300px)}
+  #tab-write .pad{width:min(260px,calc(100vw - 40px));height:min(260px,calc(100vw - 40px))}
+  #tab-cards .note{display:none}
   .face .big,.q .ask.han{font-size:clamp(46px,17vw,72px)}
   .face.back .big{font-size:clamp(40px,13vw,54px)!important}
   .sp-card .big{font-size:clamp(46px,17vw,68px)}
@@ -314,6 +316,34 @@ h2{font-family:var(--f-disp);font-weight:400}
   .note{font-size:12.5px}
 }
 @media (max-width:360px){nav button span{display:none}nav button{min-height:46px}}
+/* ---- phone, round 2 ---- */
+#pad,#pad *{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#pad{overscroll-behavior:contain}
+@media (max-width:640px){
+  #chips,#spChips{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding-bottom:2px;margin-inline:-4px;padding-inline:4px;scroll-snap-type:x proximity}
+  #chips::-webkit-scrollbar,#spChips::-webkit-scrollbar{display:none}
+  #chips .chip,#spChips .chip{flex:none;scroll-snap-align:start}
+  #tab-write .desk{grid-template-columns:1fr;justify-items:center}
+  #tab-write .info{width:100%;align-items:center;text-align:center;gap:6px}
+  #tab-write .info .row{justify-content:center}
+  #strip svg{width:28px;height:28px}
+  #tab-write>.row,#tab-speak>.row:last-of-type{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #tab-write>.row .grow,#tab-speak>.row:last-of-type .grow{display:none}
+  #tab-write>.row .btn{width:100%;padding-inline:8px}
+  .prog{font-size:0}.prog b{font-size:17px;display:block;line-height:1.1}
+  .prog::after{content:"знаю";font-size:10px;display:block}
+  .sp-card{padding:16px 14px;gap:8px}
+  .mic{width:76px;height:76px}
+  #tab-cards .row{gap:8px}
+  #tab-cards .row .grow{display:none}
+  #shuffle{width:100%}
+  .q{padding:18px 14px}
+  .hsk-lv{gap:4px}
+  .hsk-lv button{font-size:12px;min-width:0}
+  .hsk-lv button small{font-size:10px}
+  #hskSearch{flex-basis:100%}
+}
+
 </style>
 </head>
 <body>
